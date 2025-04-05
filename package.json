@@ -1,0 +1,30 @@
+{
+  "name": "ai_ans_sender",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -e ts --exec \"ts-node src/index.ts\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/screenshot-desktop": "^1.12.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "fuse.js": "^7.1.0",
+    "node-global-key-listener": "^0.3.0",
+    "nodemon": "^3.1.9",
+    "openai": "^4.91.1",
+    "screenshot-desktop": "^1.15.1",
+    "sharp": "^0.34.0",
+    "tesseract.js": "^6.0.0",
+    "twilio": "^5.5.1"
+  }
+}
