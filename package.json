@@ -6,20 +6,25 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon -e ts --exec \"ts-node src/index.ts\"",
     "dev": "nodemon -e ts --exec \"ts-node src/final.ts\"",
-    "prod": "nodemon -e ts --exec \"ts-node src/main.ts\""
+    "prod": "concurrently \"nodemon --watch src --ext ts --exec ts-node src/main.ts\" \"nodemon --watch src --ext ts --exec ts-node src/save-coordinates.ts\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
     "@types/node": "^22.14.0",
     "@types/screenshot-desktop": "^1.12.3",
+    "concurrently": "^9.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "express": "^5.1.0",
     "fuse.js": "^7.1.0",
     "node-global-key-listener": "^0.3.0",
     "nodemon": "^3.1.9",

@@ -13,7 +13,6 @@ const MANUAL_SCREENSHOT_DIR = path.resolve("./screenshots/manual");
 
 const processedFiles = new Set<string>();
 
-// Create folders if not exist
 fs.mkdirSync(AUTO_SCREENSHOT_DIR, { recursive: true });
 fs.mkdirSync(MANUAL_SCREENSHOT_DIR, { recursive: true });
 
@@ -65,7 +64,30 @@ const watchManualScreenshotFolder = () => {
 
 // -------------------- 📸 Predefined Screenshot (F8) --------------------
 
-const REGION = { left: 500, top: 300, width: 800, height: 300 };
+const COORDINATES_FILE = path.resolve("coordinates.json");
+
+const getDynamicRegion = (): {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+} => {
+  try {
+    const data = fs.readFileSync(COORDINATES_FILE, "utf-8");
+    const coords = JSON.parse(data);
+    return {
+      left: Math.round(coords.x),
+      top: Math.round(coords.y),
+      width: Math.round(coords.width),
+      height: Math.round(coords.height),
+    };
+  } catch (err) {
+    console.error("❌ Failed to read coordinates.json. Using default region.");
+    return { left: 0, top: 0, width: 500, height: 300 };
+  }
+};
+
+const region = getDynamicRegion();
 
 const takeScreenshotAndProcess = async () => {
   try {
@@ -78,9 +100,7 @@ const takeScreenshotAndProcess = async () => {
 
     await screenshot({ filename: fullImgPath });
 
-    await sharp(fullImgPath)
-      .extract({ ...REGION })
-      .toFile(croppedImgPath);
+    await sharp(fullImgPath).extract(region).toFile(croppedImgPath);
 
     await processImage(croppedImgPath);
   } catch (err) {
@@ -103,6 +123,27 @@ keyboard.addListener((e) => {
     if (e.name === "F7") {
       console.log("🖱️ F7 Pressed: Start watching for manual screenshots...");
       watchManualScreenshotFolder();
+    }
+
+    if (e.name === "F6") {
+      console.log(
+        "🖱️ F6 Pressed: Taking full screenshot and saving as screenshot.png..."
+      );
+      const screenshotPath = path.resolve("screenshot.png");
+
+      screenshot({ filename: screenshotPath })
+        .then(async () => {
+          console.log(`✅ Screenshot saved at: ${screenshotPath}`);
+
+          const frontendUrl = "frontend-url"; // Replace with your actual frontend URL
+          // Send link via SMS
+          await sendSMS(`📸 Screenshot available at:\n${frontendUrl}`);
+        })
+        .catch((err) => {
+          console.error("❌ Error saving screenshot:", err);
+          // Optionally notify failure
+          // await sendSMS("⚠️ Failed to take screenshot.");
+        });
     }
   }
 });
