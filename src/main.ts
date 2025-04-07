@@ -29,7 +29,7 @@ const processImage = async (filePath: string) => {
     const answer = await getAnswerFromGroqAI(text);
     console.log("🤖 AI Answer:", answer);
 
-    // await sendSMS(`🧠 Answer:\n\n${answer}`);
+    await sendSMS(`🧠 Answer:\n\n${answer}`);
   } catch (err) {
     console.error("❌ Error processing image:", err);
   }
